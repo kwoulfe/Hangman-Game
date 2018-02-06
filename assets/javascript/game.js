@@ -114,8 +114,6 @@ function validateUserGuess() {
 }
 
 function hasUserWon() {
-	// check to see if user has won which will mean all the
-	// letters have been revealed (no false flags remain in the array)
 	if (arrayFromWord.indexOf(false) < 0 ) {
 		console.log("USER WINS");
 		wins++;
@@ -128,10 +126,8 @@ function hasUserWon() {
 }
 
 function hasUserLost() {
-	// check to see if user has lost which will mean guessesLeft = 0
 	if (guessesRemaining == 0) {
 		console.log("USER LOSES");
-		// user has lost, increment losses
 		losses++;
 		var audio = new Audio("assets/sounds/Umpire Saying Youre Out-SoundBible.com-182214840.mp3");
 		audio.play();
@@ -143,7 +139,6 @@ function hasUserLost() {
 }
 
 function resetHtmlVariable() {
-	// reset the html variable so we can rebuild it after next user guess
 	html="<p><h1>";
 }
 
@@ -151,37 +146,26 @@ function resetHtmlVariable() {
 
 wordBreakdown();
 
-// lets begin by resetting the game
 resetGame();
 
-// debugging
 consoleLogs();
 
-// start listening for events
 document.onkeyup = function(event) {
 
-	// When user presses a key, it records it and saves to userGuess
 	userGuess = String.fromCharCode(event.keyCode).toLowerCase();
 
-	// check if user's guess is valid and update appropriate array
 	validateUserGuess();
 
-	// inject progress so far back into html
 	displayProgress();
 
-	// debugging
 	consoleLogs();
 
-	// reset the html variable
 	resetHtmlVariable();
 
-	// check whether user has won and reset if true
 	hasUserWon();
 
-	// check whether user has lost and reset if true
 	hasUserLost();
 
-	// debugging
 	consoleLogs();
 }
 
