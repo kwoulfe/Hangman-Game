@@ -121,8 +121,8 @@ function hasUserWon() {
 		wins++;
 		var audio = new Audio("assets/sounds/hitcrowdcheer.mp3");
 		audio.play();
-		var winImage="<img src=\"assets/images/920x920.jpg\" class=\"img-responsive\" alt=\"Reddick Wins\">";
-		document.querySelector("#winImage").innerHTML = winImage;
+		var batterImage="<img src=\"assets/images/920x920.jpg\" class=\"img-responsive\" alt=\"Reddick Wins\">";
+		document.querySelector("#batterImage").innerHTML = batterImage;
 		resetGame();
 	}	
 }
@@ -133,6 +133,10 @@ function hasUserLost() {
 		console.log("USER LOSES");
 		// user has lost, increment losses
 		losses++;
+		var audio = new Audio("assets/sounds/Umpire Saying Youre Out-SoundBible.com-182214840.mp3");
+		audio.play();
+		var batterImage="<img src=\"assets/images/dt.common.streams.StreamServer.jpg\" class=\"img-responsive\" alt=\"Reddick Wins\">";
+		document.querySelector("#batterImage").innerHTML = batterImage;
 		resetGame();
 	}
 
