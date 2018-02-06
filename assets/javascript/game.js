@@ -1,6 +1,6 @@
 // variables
 
-var wordList = ["Atlanta Braves", "Miami Marlins", "New York Mets", "Philadelphia Phillies", "Washington Nationals", "Chicago Cubs", "Cincinnati Reds", "Milwaukee Brewers", "Pittsburgh Pirates", "St. Louis Cardinals", "Arizona Diamondbacks", "Colorado Rockies", "Los Angeles Dodgers", "San Diego Padres", "San Francisco Giants", "Baltimore Orioles", "Boston Red Sox", "New York Yankees", "Tampa Bay Rays", "Toronto Blue Jays", "Chicago White Sox", "Cleveland Indians", "Detroit Tigers", "Kansas City Royals", "Minnesota Twins", "Houston Astros", "Los Angeles Angels", "Oakland Athletics", "Seattle Mariners", "Texas Rangers"];
+var wordList = ["atlanta braves", "miami Marlins", "new york mets", "philadelphia phillies", "washington nationals", "chicago cubs", "cincinnati reds", "milwaukee brewers", "pittsburgh pirates", "st louis cardinals", "arizona diamondbacks", "colorado rockies", "los angeles dodgers", "san diego padres", "san francisco giants", "baltimore orioles", "boston red sox", "new york yankees", "tampa bay rays", "toronto blue jays", "chicago white sox", "cleveland indians", "detroit tigers", "kansas city royals", "minnesota twins", "houston astros", "los angeles angels", "oakland athletics", "seattle mariners", "texas rangers"];
 
 var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
@@ -14,11 +14,11 @@ var guessTotal = [];
 
 var userGuess = null;
 
-var wordToBeGuessed = wordsList[Math.floor(Math.random() * wordsList.length)];
+var wordToBeGuessed = wordList[Math.floor(Math.random() * wordList.length)];
 
 var arrayFromWord = [];
 
-var = "<p><h1>";
+var html = "<p><h1>";
 
 // functions
 
@@ -34,17 +34,26 @@ function wordBreakdown() {
 	}
 }
 
+function consoleLogs() {
+	console.log("wins: " + wins + "\n" + "losses: " + losses + "\n");
+	console.log("guessesRemaining: " + guessesRemaining + "\n");
+	console.log("guessTotal: " + guessTotal + "\n");
+	console.log("wordToBeGuessed: " + wordToBeGuessed + "\n");
+	console.log("arrayFromWord: " + arrayFromWord + "\n");
+	console.log("--------------------------------");
+}
+
 function resetGame() {
 	guessesRemaining = 12;
 	guessTotal = [];
-	wordToBeGuessed = wordsList[Math.floor(Math.random() * wordsList.length)];
+	wordToBeGuessed = wordList[Math.floor(Math.random() * wordList.length)];
 	arrayFromWord = [];
 	wordBreakdown();
-	var htmlInstructions="<p><h3>Press any key to begin guessing</p></h3>";
+	var htmlInstructions = "<p><h3>Press any key to begin guessing</p></h3>";
 	document.querySelector("#instructions").innerHTML = htmlInstructions;
 	var htmlGameInitial = "<p><h1>";
 	for (var i = 0; i < wordToBeGuessed.length; i++) {
-		if (wordToBeGuessed.charAt(i) = " ") {
+		if (wordToBeGuessed.charAt(i) == " ") {
 			htmlGameInitial += "&nbsp;&nbsp;";
 		} else {
 			htmlGameInitial += "_&nbsp;";
@@ -53,12 +62,11 @@ function resetGame() {
 
 	htmlGameInitial += "</h1></p>"
 	document.querySelector("#game").innerHTML = htmlGameInitial;
-	var htmlStats = "<p><h3>" + "Wins: " + wins + " Losses: " + losses + " Guesses Left : " + guessesLeft + "</h3></p>";
+	var htmlStats = "<p><h3>" + "Wins: " + wins + " Losses: " + losses + " Guesses Left : " + guessesRemaining + "</h3></p>";
 	document.querySelector("#stats").innerHTML = htmlStats;
 }
 
-
-function progress()	{
+function displayProgress()	{
 	for (i = 0, j = 0; i < (arrayFromWord.length / 2); i++)	{
 		if (arrayFromWord[j+1] == true) {
 			html += arrayFromWord[j];
@@ -68,13 +76,97 @@ function progress()	{
 		html += "&nbsp;";
 		j = j+2;
 	}
+	html += "</h1></p>"
+	document.querySelector("#game").innerHTML = html;
+
+	htmlStats = "<p><h3>Wins: " + wins + " Losses: " + losses + " Guesses Left : " + guessesRemaining + "</h3></p>";
+	document.querySelector("#stats").innerHTML = htmlStats;
+
+	htmlGuesses = "<p><h3>"
+	for (var i = 0; i < guessTotal.length; i++) {
+		htmlGuesses += guessTotal[i] + "&nbsp;";
+	}
+	htmlGuesses += "</h3></p>";
+	document.querySelector("#guesses").innerHTML = htmlGuesses;
 
 }
 
+function validateUserGuess() {
+	if (guessTotal.indexOf(userGuess) < 0 && alphabet.indexOf(userGuess) >= 0) {
+		guessTotal[guessTotal.length]=userGuess;
+	}	
+	for (var i = 0; i < arrayFromWord.length; i++) {
+		if (arrayFromWord[i] === userGuess) {
+			// if the letter wasn't previously guessed then play woohoo
+			arrayFromWord[i+1] == false;
+			arrayFromWord[i+1] = true;
+		}
+	}	
+}
 
+function hasUserWon() {
+	// check to see if user has won which will mean all the
+	// letters have been revealed (no false flags remain in the array)
+	if (arrayFromWord.indexOf(false) < 0 ) {
+		console.log("USER WINS");
+		wins++;
+		resetGame();
+	}	
+}
 
+function hasUserLost() {
+	// check to see if user has lost which will mean guessesLeft = 0
+	if (guessesRemaining == 0) {
+		console.log("USER LOSES");
+		// user has lost, increment losses
+		losses++;
+		resetGame();
+	}
 
+}
 
+function resetHtmlVariable() {
+	// reset the html variable so we can rebuild it after next user guess
+	html="<p><h1>";
+}
+
+// main game
+
+wordBreakdown();
+
+// lets begin by resetting the game
+resetGame();
+
+// debugging
+consoleLogs();
+
+// start listening for events
+document.onkeyup = function(event) {
+
+	// When user presses a key, it records it and saves to userGuess
+	userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+
+	// check if user's guess is valid and update appropriate array
+	validateUserGuess();
+
+	// inject progress so far back into html
+	displayProgress();
+
+	// debugging
+	consoleLogs();
+
+	// reset the html variable
+	resetHtmlVariable();
+
+	// check whether user has won and reset if true
+	hasUserWon();
+
+	// check whether user has lost and reset if true
+	hasUserLost();
+
+	// debugging
+	consoleLogs();
+}
 
 
 
