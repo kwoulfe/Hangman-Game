@@ -1,6 +1,6 @@
 // variables
 
-var wordList = ["atlanta braves", "miami Marlins", "new york mets", "philadelphia phillies", "washington nationals", "chicago cubs", "cincinnati reds", "milwaukee brewers", "pittsburgh pirates", "st louis cardinals", "arizona diamondbacks", "colorado rockies", "los angeles dodgers", "san diego padres", "san francisco giants", "baltimore orioles", "boston red sox", "new york yankees", "tampa bay rays", "toronto blue jays", "chicago white sox", "cleveland indians", "detroit tigers", "kansas city royals", "minnesota twins", "houston astros", "los angeles angels", "oakland athletics", "seattle mariners", "texas rangers"];
+var wordList = ["atlanta braves", "miami marlins", "new york mets", "philadelphia phillies", "washington nationals", "chicago cubs", "cincinnati reds", "milwaukee brewers", "pittsburgh pirates", "st louis cardinals", "arizona diamondbacks", "colorado rockies", "los angeles dodgers", "san diego padres", "san francisco giants", "baltimore orioles", "boston red sox", "new york yankees", "tampa bay rays", "toronto blue jays", "chicago white sox", "cleveland indians", "detroit tigers", "kansas city royals", "minnesota twins", "houston astros", "los angeles angels", "oakland athletics", "seattle mariners", "texas rangers"];
 
 var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
@@ -92,13 +92,22 @@ function displayProgress()	{
 }
 
 function validateUserGuess() {
+	if (arrayFromWord.indexOf(userGuess) < 0 && guessTotal.indexOf(userGuess) < 0 && alphabet.indexOf(userGuess) >= 0) {
+		guessesRemaining--;
+		var audio = new Audio("assets/sounds/13594_1459781221.mp3");
+		audio.play();
+	}
+
 	if (guessTotal.indexOf(userGuess) < 0 && alphabet.indexOf(userGuess) >= 0) {
 		guessTotal[guessTotal.length]=userGuess;
 	}	
 	for (var i = 0; i < arrayFromWord.length; i++) {
 		if (arrayFromWord[i] === userGuess) {
 			// if the letter wasn't previously guessed then play woohoo
-			arrayFromWord[i+1] == false;
+			if (arrayFromWord[i+1] == false) {
+				var audio = new Audio("assets/sounds/woodbat.mp3");
+				audio.play();
+			}
 			arrayFromWord[i+1] = true;
 		}
 	}	
@@ -110,6 +119,10 @@ function hasUserWon() {
 	if (arrayFromWord.indexOf(false) < 0 ) {
 		console.log("USER WINS");
 		wins++;
+		var audio = new Audio("assets/sounds/hitcrowdcheer.mp3");
+		audio.play();
+		var winImage="<img src=\"assets/images/920x920.jpg\" class=\"img-responsive\" alt=\"Reddick Wins\">";
+		document.querySelector("#winImage").innerHTML = winImage;
 		resetGame();
 	}	
 }
